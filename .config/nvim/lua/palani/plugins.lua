@@ -157,6 +157,15 @@ require("lazy").setup({
 		end,
 	},
 
+	-- git links on the fly
+	{
+		"linrongbin16/gitlinker.nvim",
+		cmd = { "GitLink" },
+		config = function()
+			require("gitlinker").setup()
+		end,
+	},
+
 	-- diff view for git
 	{ "sindrets/diffview.nvim", cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" } },
 
