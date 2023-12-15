@@ -14,6 +14,7 @@
   "fidget.nvim": { "branch": "main", "commit": "0ba1e16d07627532b6cae915cc992ecac249fb97" },
   "friendly-snippets": { "branch": "main", "commit": "53d3df271d031c405255e99410628c26a8f0d2b0" },
   "fzf-lua": { "branch": "main", "commit": "0fde123a55a1e6cc617654e7a228bb2f284b0cf3" },
+  "gitlinker.nvim": { "branch": "master", "commit": "e2a2b6a68dad3c10e7b42195f1970b6039f5786b" },
   "gitsigns.nvim": { "branch": "main", "commit": "87640f5a877b18bdd49884dbcac220fed924b867" },
   "harpoon": { "branch": "harpoon2", "commit": "a31438258a75553d0cc53b2fd795eb6f7863e67c" },
   "lazy.nvim": { "branch": "main", "commit": "96584866b9c5e998cbae300594d0ccfd0c464627" },
@@ -33,6 +34,7 @@
   "oil.nvim": { "branch": "master", "commit": "1fce168881248e8310ebff2b4417db24ab7c175a" },
   "plenary.nvim": { "branch": "master", "commit": "55d9fe89e33efd26f532ef20223e5f9430c8b0c0" },
   "refactoring.nvim": { "branch": "master", "commit": "156532476deb10b1b2a32cb38e1078b3f9951c42" },
+  "rust-tools.nvim": { "branch": "master", "commit": "0cc8adab23117783a0292a0c8a2fbed1005dc645" },
   "typescript-tools.nvim": { "branch": "master", "commit": "cbc454075741cd942a5ba92d64613533782f37c7" },
   "vim-tmux-navigator": { "branch": "master", "commit": "7db70e08ea03b3e4d91f63713d76134512e28d7e" }
 }

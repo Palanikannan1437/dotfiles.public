@@ -286,6 +286,7 @@ require("lazy").setup({
 		opts = {
 			formatters_by_ft = {
 				go = { "gofumpt", "goimports", "golines" },
+				rust = { "rustfmt" },
 				css = { "prettierd" },
 				javascript = { "prettierd" },
 				javascriptreact = { "prettierd" },
@@ -308,6 +309,7 @@ require("lazy").setup({
 	-- linter
 	{
 		"mfussenegger/nvim-lint",
+		ft = filetypes,
 		event = { "BufWritePre", "BufNewFile" },
 		config = function()
 			local lint = require("lint")
@@ -540,38 +542,6 @@ require("lazy").setup({
 		end,
 	},
 
-	-- better ts tools
-	{
-		"pmizio/typescript-tools.nvim",
-		ft = { "typescript", "typescriptreact" },
-		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-		config = function()
-			require("typescript-tools").setup({
-				on_attach = function(client, bufnr)
-					client.server_capabilities.documentFormattingProvider = false
-					client.server_capabilities.documentRangeFormattingProvider = false
-
-					if vim.lsp.inlay_hint then
-						vim.lsp.inlay_hint(bufnr, true)
-					end
-				end,
-				settings = {
-					tsserver_file_preferences = {
-						-- Inlay Hints
-						includeInlayParameterNameHints = "all",
-						includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-						includeInlayFunctionParameterTypeHints = true,
-						includeInlayVariableTypeHints = true,
-						includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-						includeInlayPropertyDeclarationTypeHints = true,
-						includeInlayFunctionLikeReturnTypeHints = true,
-						includeInlayEnumMemberValueHints = true,
-					},
-				},
-			})
-		end,
-	},
-
 	-- lsp progress
 	{
 		"j-hui/fidget.nvim",
@@ -675,6 +645,12 @@ require("lazy").setup({
 				},
 				handlers = {
 					lsp_zero.default_setup,
+					rust_analyzer = function()
+						local rust_tools = require("rust-tools")
+
+						rust_tools.setup({})
+						rust_tools.inlay_hints.enable()
+					end,
 					lua_ls = function()
 						-- (Optional) Configure lua language server for neovim
 						local lua_opts = lsp_zero.nvim_lua_ls()
@@ -795,5 +771,44 @@ require("lazy").setup({
 				},
 			})
 		end,
+	},
+
+	-- typescript stuff
+	{
+		"pmizio/typescript-tools.nvim",
+		ft = { "typescript", "typescriptreact" },
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		config = function()
+			require("typescript-tools").setup({
+				on_attach = function(client, bufnr)
+					client.server_capabilities.documentFormattingProvider = false
+					client.server_capabilities.documentRangeFormattingProvider = false
+
+					if vim.lsp.inlay_hint then
+						vim.lsp.inlay_hint(bufnr, true)
+					end
+				end,
+				settings = {
+					tsserver_file_preferences = {
+						-- Inlay Hints
+						includeInlayParameterNameHints = "all",
+						includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+						includeInlayFunctionParameterTypeHints = true,
+						includeInlayVariableTypeHints = true,
+						includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+						includeInlayPropertyDeclarationTypeHints = true,
+						includeInlayFunctionLikeReturnTypeHints = true,
+						includeInlayEnumMemberValueHints = true,
+					},
+				},
+			})
+		end,
+	},
+
+	-- rust stuff
+	{
+		"simrat39/rust-tools.nvim",
+		ft = { "rust" },
+		requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
 	},
 })
