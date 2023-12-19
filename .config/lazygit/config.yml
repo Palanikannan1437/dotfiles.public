@@ -28,8 +28,25 @@ gui:
       - red # Red
 
 
+  # - key: "<C-p>"
+  #   command: "gh pr create --fill --web"
+  #   context: "global"
+  #   loadingText: "Creating pull request on GitHub"
+# customCommands:
+#   - key: "<C-p>"
+#     command: 'export OPENAI_API_KEY=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  &&  git gci -n 5 -f'
+#     context: "global"
+#     loadingText: "Generating commit messages"
+      #
 customCommands:
-  - key: "<c-r>"
-    command: "gh pr create --fill --web"
-    context: "global"
-    loadingText: "Creating pull request on GitHub"
+  - key: '<C-p>'
+    description: 'Use Git Genie to create a commit'
+    context: 'files'
+    prompts:
+      - type: 'menuFromCommand'
+        title: 'Select a commit message'
+        key: 'Message'
+        command: 'git gci -n 5 -f'
+        loadingText: 'Loading commit messages...'
+    command: 'git commit -m "{{index .PromptResponses 0}}"'
+    loadingText: 'Creating commit...'
