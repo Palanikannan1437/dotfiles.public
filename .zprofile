@@ -1,5 +1,5 @@
 # ln -s ~/Documents/work/dotfiles.public/.zprofile /Users/palanikannan/.zprofile
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-17.0.3.1.jdk/Contents/Home"
+# export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-17.0.3.1.jdk/Contents/Home"
 
 # Setting PATH for Python 3.10
 # The original version is saved in .zprofile.pysave

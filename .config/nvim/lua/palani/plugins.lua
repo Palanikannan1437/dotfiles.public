@@ -2,26 +2,6 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local nnoremap = require("palani.keymap").nnoremap
 local uv = vim.uv or vim.loop
 
-local filetypes = {
-	"typescript",
-	"typescriptreact",
-	"javascript",
-	"javascriptreact",
-	"sh",
-	"bash",
-	"zsh",
-	"lua",
-	"rust",
-	"go",
-	"html",
-	"css",
-	"json",
-	"yaml",
-	"toml",
-	"markdown",
-	"dockerfile",
-}
-
 -- Auto-install lazy.nvim if not present
 if not uv.fs_stat(lazypath) then
 	print("Installing lazy.nvim....")
@@ -140,7 +120,8 @@ require("lazy").setup({
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
-		ft = filetypes,
+		-- ft = filetypes,
+		event = { "BufReadPre", "BufNewFile" },
 		config = true,
 		opts = function()
 			local C = {
@@ -258,9 +239,20 @@ require("lazy").setup({
 	-- color theme
 	{
 		"catppuccin/nvim",
-		lazy = false,
 		priority = 1000,
 		name = "catppuccin",
+		lazy = false,
+	},
+
+	-- startup screen
+	{
+		"nvimdev/dashboard-nvim",
+		event = "VimEnter",
+		config = true,
+		opts = {
+			theme = "doom",
+		},
+		dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	},
 
 	-- formatter
@@ -309,8 +301,8 @@ require("lazy").setup({
 	-- linter
 	{
 		"mfussenegger/nvim-lint",
-		ft = filetypes,
-		event = { "BufWritePre", "BufNewFile" },
+		-- ft = filetypes,
+		event = { "BufReadPre", "BufWritePre", "BufNewFile" },
 		config = function()
 			local lint = require("lint")
 
@@ -338,8 +330,9 @@ require("lazy").setup({
 	-- treesitter syntax highlighting (lazy loaded)nvim-treesitter/nvim-treesitter-textobjects
 	{
 		"nvim-treesitter/nvim-treesitter",
-		event = { "BufNewFile" },
-		ft = filetypes,
+		-- event = { "BufNewFile" },
+		event = { "BufReadPre", "BufNewFile" },
+		-- ft = filetypes,
 		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
 		build = function()
 			require("nvim-treesitter.install").update({ with_sync = true })
@@ -413,9 +406,22 @@ require("lazy").setup({
 	{
 		"stevearc/oil.nvim",
 		opts = {},
+		keys = {
+			{
+				"-",
+				mode = { "n" },
+				function()
+					require("oil").open()
+				end,
+				desc = "Open parent directory",
+			},
+		},
 		config = function()
 			require("oil").setup({
-				use_default_keymaps = true,
+				use_default_keymaps = false,
+				keymaps = {
+					["<CR>"] = "actions.select",
+				},
 				view_options = {
 					show_hidden = true,
 					is_hidden_file = function(name, bufnr)
@@ -542,18 +548,11 @@ require("lazy").setup({
 		end,
 	},
 
-	-- lsp progress
-	{
-		"j-hui/fidget.nvim",
-		tag = "legacy",
-		event = "LspAttach",
-		config = true,
-	},
-
 	-- lsp
 	{
 		"VonHeikemen/lsp-zero.nvim",
-		ft = filetypes,
+		-- ft = filetypes,
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{ "neovim/nvim-lspconfig" },
 			{ "hrsh7th/cmp-nvim-lsp" },
@@ -640,17 +639,17 @@ require("lazy").setup({
 					"html",
 					"cssls",
 					"bashls",
+					"rust_analyzer",
 					"gopls",
 					"tailwindcss",
 				},
 				handlers = {
 					lsp_zero.default_setup,
-					rust_analyzer = function()
-						local rust_tools = require("rust-tools")
-
-						rust_tools.setup({})
-						rust_tools.inlay_hints.enable()
-					end,
+					-- rust_analyzer = function()
+					-- 	local rust_tools = require("rust-tools")
+					-- 	rust_tools.setup({})
+					-- 	rust_tools.inlay_hints.enable()
+					-- end,
 					lua_ls = function()
 						-- (Optional) Configure lua language server for neovim
 						local lua_opts = lsp_zero.nvim_lua_ls()
@@ -808,7 +807,41 @@ require("lazy").setup({
 	-- rust stuff
 	{
 		"simrat39/rust-tools.nvim",
-		ft = { "rust" },
+		ft = "rust",
 		requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		config = function()
+			local rust_tools = require("rust-tools")
+
+			rust_tools.setup({
+				tools = {
+					hover_actions = {
+						auto_focus = true,
+					},
+				},
+
+				server = {
+					on_attach = function(client, bufnr)
+						vim.keymap.set("n", "<leader>cha", rust_tools.hover_actions.hover_actions, { buffer = bufnr })
+						vim.keymap.set("n", "<leader>cr", rust_tools.runnables.runnables, { buffer = bufnr })
+						vim.keymap.set(
+							"n",
+							"<leader>cc",
+							rust_tools.open_cargo_toml.open_cargo_toml,
+							{ buffer = bufnr }
+						)
+					end,
+				},
+			})
+		end,
+	},
+
+	-- smooth cursor
+	{
+		"gen740/SmoothCursor.nvim",
+		config = true,
+		opts = {
+			cursor = "👉",
+		},
+		cmd = { "SmoothCursorStart", "SmoothCursorToggle" },
 	},
 })

@@ -19,8 +19,8 @@ vim.opt.showmode = false
 
 vim.opt.smartindent = true
 
--- common status lines across buffer
-vim.opt.laststatus = 3
+-- -- common status lines across buffer
+-- vim.opt.laststatus = 3
 
 -- decent crisp seperator
 vim.cmd("highlight WinSeparator guibg=None")
