@@ -46,12 +46,6 @@ require("lazy").setup({
 			)
 
 			nnoremap(
-				"<leader>q",
-				"<cmd>lua require('fzf-lua').quickfix({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
-				{ silent = true }
-			)
-
-			nnoremap(
 				"<leader>rh",
 				"<cmd>lua require('fzf-lua').live_grep_native({ fzf_opts = {['--layout'] = 'reverse-list'} , resume = true })<CR>",
 				{ silent = true }
@@ -284,7 +278,6 @@ require("lazy").setup({
 				javascriptreact = { "prettierd" },
 				typescript = { "prettierd" },
 				typescriptreact = { "prettierd" },
-				markdown = { "prettierd" },
 				lua = { "stylua" },
 				sh = { "shfmt" },
 				zsh = { "shfmt" },
@@ -340,7 +333,7 @@ require("lazy").setup({
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				sync_install = true,
-				auto_install = true,
+				auto_install = false,
 				ignore_install = { "" },
 				highlight = {
 					enable = true,
@@ -663,6 +656,14 @@ require("lazy").setup({
 	{
 		"williamboman/mason.nvim",
 		cmd = { "Mason" },
+		config = true,
+	},
+
+	-- lsp progress
+	{
+		"j-hui/fidget.nvim",
+		tag = "legacy",
+		event = "LspAttach",
 		config = true,
 	},
 
