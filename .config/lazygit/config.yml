@@ -31,11 +31,5 @@ customCommands:
   - key: '<C-p>'
     description: 'Use Git Genie to create a commit'
     context: 'files'
-    prompts:
-      - type: 'menuFromCommand'
-        title: 'Select a commit message'
-        key: 'Message'
-        command: 'ai-commit.sh'
-        loadingText: 'Loading commit messages...'
-    command: 'git commit -m "{{index .PromptResponses 0}}"'
+    command: 'ai_commit'
     loadingText: 'Creating commit...'
