@@ -326,7 +326,7 @@ require("lazy").setup({
 		-- event = { "BufNewFile" },
 		event = { "BufReadPre", "BufNewFile" },
 		-- ft = filetypes,
-		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", "chrisgrieser/nvim-various-textobjs" },
 		build = function()
 			require("nvim-treesitter.install").update({ with_sync = true })
 		end,
@@ -345,6 +345,29 @@ require("lazy").setup({
 	},
 
 	{
+		"chrisgrieser/nvim-various-textobjs",
+		lazy = true,
+		config = function()
+			require("various-textobjs").setup({
+				-- lines to seek forwards for "small" textobjs (mostly characterwise textobjs)
+				-- set to 0 to only look in the current line
+				lookForwardSmall = 5,
+
+				-- lines to seek forwards for "big" textobjs (mostly linewise textobjs)
+				lookForwardBig = 15,
+
+				-- use suggested keymaps (see overview table in README)
+				useDefaultKeymaps = false,
+
+				-- disable only some default keymaps, e.g. { "ai", "ii" }
+				disabledKeymaps = {},
+			})
+			local keymap = vim.keymap.set
+			keymap({ "o", "x" }, "mc", "<cmd>lua require('various-textobjs').multiCommentedLines()<CR>")
+		end,
+	},
+
+	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		lazy = true,
 		config = function()
@@ -352,10 +375,10 @@ require("lazy").setup({
 				textobjects = {
 					move = {
 						enable = true,
-						goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
-						goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
-						goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
-						goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
+						goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@call.outer" },
+						goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@call.outer" },
+						goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@call.outer" },
+						goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@call.outer" },
 					},
 
 					select = {
@@ -382,7 +405,6 @@ require("lazy").setup({
 		end,
 	},
 
-	-- surround
 	{
 		"kylechui/nvim-surround",
 		version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -462,8 +484,8 @@ require("lazy").setup({
 		},
 	},
 
-	-- harpooooon for quick file switching
-	-- { "ThePrimeagen/harpoon", event = "VeryLazy" },
+	-- { "ThePrimeagen/vim-apm", branch = "v2" },
+
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
