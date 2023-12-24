@@ -27,6 +27,7 @@ gui:
     unstagedChangesColor:
       - red # Red
 
+
 customCommands:
   - key: '<C-p>'
     description: 'Use Git Genie to create a commit'
