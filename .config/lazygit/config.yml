@@ -35,7 +35,7 @@ customCommands:
       - type: 'menuFromCommand'
         title: 'Select a commit message'
         key: 'Message'
-        command: 'git gci -n 5 -f'
+        command: 'ai-commit.sh'
         loadingText: 'Loading commit messages...'
     command: 'git commit -m "{{index .PromptResponses 0}}"'
     loadingText: 'Creating commit...'

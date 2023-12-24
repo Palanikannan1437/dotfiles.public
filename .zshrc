@@ -15,6 +15,35 @@ source $ZSH/oh-my-zsh.sh
 # tmux-sessionizer
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^v "vi .\n"
+bindkey -s ^a "tmux a"
+
+# Define a function to fetch and export the OPENAI_API_KEY from 1password
+fetch_openai_key() {
+	export OPENAI_API_KEY=$(op item get OPENAI_API_KEY --fields=credential)
+}
+
+# Bind the function to a key combination, for example, Ctrl+o
+bindkey -s '^o' 'fetch_openai_key\n'
+
+# Bind for ai-commit
+bindkey -s '^n' 'ai_commit\n'
+
+# Define your ai-commit function
+ai_commit() {
+	# Check if OPENAI_API_KEY is set and non-empty
+	if [[ -z "${OPENAI_API_KEY}" ]]; then
+		# If OPENAI_API_KEY is not set or is empty, fetch it
+		fetch_openai_key
+	fi
+
+	# Check again if OPENAI_API_KEY is set and non-empty
+	if [[ -n "${OPENAI_API_KEY}" ]]; then
+		# If OPENAI_API_KEY is now set, execute ai-commit
+		ai-commit
+	else
+		echo "Failed to fetch OPENAI_API_KEY. Cannot execute ai-commit."
+	fi
+}
 
 # history-substring-search options
 bindkey "$terminfo[kcuu1]" history-substring-search-up
