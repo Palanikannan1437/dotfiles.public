@@ -236,6 +236,17 @@ require("lazy").setup({
 		priority = 1000,
 		name = "catppuccin",
 		lazy = false,
+		config = function()
+			require("catppuccin").setup({
+				highlight_overrides = {
+					mocha = function(mocha)
+						return {
+							LineNr = { fg = mocha.overlay1 },
+						}
+					end,
+				},
+			})
+		end,
 	},
 
 	-- startup screen
@@ -375,10 +386,26 @@ require("lazy").setup({
 				textobjects = {
 					move = {
 						enable = true,
-						goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@call.outer" },
-						goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@call.outer" },
-						goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@call.outer" },
-						goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@call.outer" },
+						goto_next_start = {
+							["]f"] = "@function.outer",
+							["]c"] = "@call.outer",
+							["]s"] = "@class.outer",
+						},
+						goto_next_end = {
+							["]F"] = "@function.outer",
+							["]C"] = "@call.outer",
+							["]S"] = "@class.outer",
+						},
+						goto_previous_start = {
+							["[f"] = "@function.outer",
+							["[c"] = "@call.outer",
+							["[s"] = "@class.outer",
+						},
+						goto_previous_end = {
+							["[F"] = "@function.outer",
+							["[C"] = "@call.outer",
+							["[S"] = "@class.outer",
+						},
 					},
 
 					select = {
@@ -387,8 +414,14 @@ require("lazy").setup({
 						-- Automatically jump forward to textobj, similar to targets.vim
 						lookahead = true,
 						keymaps = {
-							["ac"] = { query = "@call.outer", desc = "Select outer part of a function call" },
-							["ic"] = { query = "@call.inner", desc = "Select inner part of a function call" },
+							["ac"] = {
+								query = "@call.outer",
+								desc = "Select outer part of a function call",
+							},
+							["ic"] = {
+								query = "@call.inner",
+								desc = "Select inner part of a function call",
+							},
 
 							["af"] = {
 								query = "@function.outer",
@@ -397,6 +430,15 @@ require("lazy").setup({
 							["if"] = {
 								query = "@function.inner",
 								desc = "Select inner part of a method/function definition",
+							},
+
+							["as"] = {
+								query = "@class.outer",
+								desc = "Select outer part of a class/struct",
+							},
+							["is"] = {
+								query = "@class.inner",
+								desc = "Select inner part of a class/struct",
 							},
 						},
 					},
