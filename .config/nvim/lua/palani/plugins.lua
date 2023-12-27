@@ -253,10 +253,65 @@ require("lazy").setup({
 	{
 		"nvimdev/dashboard-nvim",
 		event = "VimEnter",
-		config = true,
-		opts = {
-			theme = "doom",
-		},
+		config = function()
+			require("dashboard").setup({
+				theme = "doom",
+				config = {
+
+					header = {
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"  ██╗   ██╗██╗███╗   ███╗ ",
+						"  ██║   ██║██║████╗ ████║ ",
+						"  ██║   ██║██║██╔████╔██║ ",
+						"  ╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+						"   ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+						"    ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+						"",
+						"",
+						"",
+						"",
+						"",
+					},
+					center = {
+						{
+							icon = " ",
+							icon_hl = "Title",
+							desc = "Find File           ",
+							desc_hl = "String",
+							key = "f",
+							keymap = "<leader>f",
+							key_hl = "Number",
+							key_format = " %s",
+							action = "lua require('fzf-lua').files({ fzf_opts = {['--layout'] = 'reverse-list'} })",
+						},
+						{
+							icon = " ",
+							desc = "Harpooned files",
+							key = "e",
+							keymap = "<C-e>",
+							key_format = " %s", -- remove default surrounding `[]`
+							action = function()
+								local harpoon = require("harpoon")
+								harpoon:setup()
+								harpoon.ui:toggle_quick_menu(harpoon:list())
+							end,
+						},
+					},
+				},
+			})
+		end,
+
 		dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	},
 
