@@ -110,6 +110,35 @@ require("lazy").setup({
 		event = "VeryLazy",
 	},
 
+	-- for live diagnostics population in quickfix list
+	{
+		"onsails/diaglist.nvim",
+		keys = {
+			{
+				"<leader>d0",
+				mode = { "n" },
+				function()
+					require("diaglist").open_buffer_diagnostics()
+				end,
+				desc = "Open buffer diagnostic list",
+			},
+			{
+				"<leader>dw",
+				mode = { "n" },
+				function()
+					require("diaglist").open_all_diagnostics()
+				end,
+				desc = "Open all diagnostic list",
+			},
+		},
+		config = function()
+			require("diaglist").init({
+				debug = false,
+				debounce_ms = 150,
+			})
+		end,
+	},
+
 	-- GIT STUFF --
 	-- git signs
 	{
