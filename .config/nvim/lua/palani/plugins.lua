@@ -571,7 +571,12 @@ require("lazy").setup({
 				mode = { "n" },
 				function()
 					local harpoon = require("harpoon")
-					harpoon:setup()
+					harpoon:setup({
+						settings = {
+							save_on_toggle = true,
+							sync_on_ui_close = true,
+						},
+					})
 					harpoon.ui:toggle_quick_menu(harpoon:list())
 				end,
 				desc = "Toggle harpoon menu",
@@ -581,7 +586,12 @@ require("lazy").setup({
 				mode = { "n" },
 				function()
 					local harpoon = require("harpoon")
-					harpoon:setup()
+					harpoon:setup({
+						settings = {
+							save_on_toggle = true,
+							sync_on_ui_close = true,
+						},
+					})
 					harpoon:list():select(1)
 				end,
 				desc = "Select harpoon item 1",
@@ -591,6 +601,12 @@ require("lazy").setup({
 				mode = { "n" },
 				function()
 					local harpoon = require("harpoon")
+					harpoon:setup({
+						settings = {
+							save_on_toggle = true,
+							sync_on_ui_close = true,
+						},
+					})
 					harpoon:list():select(2)
 				end,
 				desc = "Select harpoon item 2",
@@ -600,7 +616,12 @@ require("lazy").setup({
 				mode = { "n" },
 				function()
 					local harpoon = require("harpoon")
-					harpoon:setup()
+					harpoon:setup({
+						settings = {
+							save_on_toggle = true,
+							sync_on_ui_close = true,
+						},
+					})
 					harpoon:list():select(3)
 				end,
 				desc = "Select harpoon item 3",
@@ -610,7 +631,12 @@ require("lazy").setup({
 				mode = { "n" },
 				function()
 					local harpoon = require("harpoon")
-					harpoon:setup()
+					harpoon:setup({
+						settings = {
+							save_on_toggle = true,
+							sync_on_ui_close = true,
+						},
+					})
 					harpoon:list():select(4)
 				end,
 				desc = "Select harpoon item 4",
@@ -619,7 +645,12 @@ require("lazy").setup({
 		config = function()
 			local harpoon = require("harpoon")
 
-			harpoon:setup()
+			harpoon:setup({
+				settings = {
+					save_on_toggle = true,
+					sync_on_ui_close = true,
+				},
+			})
 		end,
 	},
 
