@@ -3,7 +3,7 @@ export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-17.0.3.1.jdk/Contents/Ho
 
 # Setting PATH for Python 3.10
 # The original version is saved in .zprofile.pysave
-PATH="/usr/local/bin:${PATH}"
+PATH="/usr/local/bin:$HOME/.local/bin:${PATH}"
 
 # pnpm
 export PNPM_HOME="/Users/palanikannan/Library/pnpm"

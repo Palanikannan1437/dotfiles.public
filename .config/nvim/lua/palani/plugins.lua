@@ -39,14 +39,55 @@ require("lazy").setup({
 		event = { "BufReadPre", "BufNewFile" },
 		config = true,
 		opts = function()
+			local icons = require("palani.icons")
 			local C = {
-				on_attach = function(buffer)
+				on_attach = function(bufnr)
 					local gs = package.loaded.gitsigns
-					local function map(mode, l, r, desc)
-						vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+
+					local function map(mode, l, r, opts)
+						opts = opts or {}
+						opts.buffer = bufnr
+						vim.keymap.set(mode, l, r, opts)
 					end
-					map("n", "]g", gs.next_hunk, "Next Hunk")
-					map("n", "[g", gs.prev_hunk, "Prev Hunk")
+					-- Navigation
+					map({ "n", "v" }, "]g", function()
+						if vim.wo.diff then
+							return "]g"
+						end
+						vim.schedule(function()
+							gs.next_hunk()
+						end)
+						return "<Ignore>"
+					end, { expr = true, desc = "Jump to next hunk" })
+
+					map({ "n", "v" }, "[g", function()
+						if vim.wo.diff then
+							return "[g"
+						end
+						vim.schedule(function()
+							gs.prev_hunk()
+						end)
+						return "<Ignore>"
+					end, { expr = true, desc = "Jump to previous hunk" })
+
+					-- Actions
+					-- visual mode
+					map("v", "<leader>gs", function()
+						gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end, { desc = "stage git hunk" })
+					map("v", "<leader>gr", function()
+						gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end, { desc = "reset git hunk" })
+					-- normal mode
+					map("n", "<leader>gs", gs.stage_hunk, { desc = "git stage hunk" })
+					map("n", "<leader>gr", gs.reset_hunk, { desc = "git reset hunk" })
+					map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "undo stage hunk" })
+
+					-- Toggles
+					map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "toggle git blame line" })
+
+					-- Text object
+					map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "select git hunk" })
 				end,
 			}
 			return C
@@ -65,12 +106,6 @@ require("lazy").setup({
 	-- diff view for git
 	{ "sindrets/diffview.nvim", cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" } },
 
-	-- git blame
-	{
-		"FabijanZulj/blame.nvim",
-		cmd = "ToggleBlame",
-	},
-
 	-- comments in nvim
 	{
 		"numToStr/Comment.nvim",
@@ -87,19 +122,16 @@ require("lazy").setup({
 		end,
 		keys = {
 			{
-				"gcc",
+				"ghh",
 				mode = { "n" },
-				function()
-					require("Comment").toggle()
-				end,
+				"<cmd>:normal gcc<CR>",
 				desc = "Comment",
 			},
 			{
-				"gc",
+				"gh",
 				mode = { "v" },
-				function()
-					require("Comment").toggle()
-				end,
+				"<cmd>:normal gcc<CR>",
+
 				desc = "Comment",
 			},
 		},
@@ -109,23 +141,22 @@ require("lazy").setup({
 		"JoosepAlviste/nvim-ts-context-commentstring",
 		keys = {
 			{
-				"gcc",
+				"ghh",
 				mode = { "n" },
-				function()
-					require("Comment").toggle()
-				end,
+				"<cmd>:normal gcc<CR>",
 				desc = "Comment",
 			},
 			{
-				"gc",
+				"gh",
 				mode = { "v" },
-				function()
-					require("Comment").toggle()
-				end,
+				"<cmd>:normal gcc<CR>",
+
 				desc = "Comment",
 			},
 		},
 	},
+
+	{ "ThePrimeagen/vim-apm" },
 
 	-- AI Autocompletion
 	{
@@ -187,7 +218,7 @@ require("lazy").setup({
 						timeout_ms = 10000,
 					})
 				end,
-				mode = "",
+				mode = { "n", "v", "x" },
 				desc = "Format buffer",
 			},
 		},
@@ -295,6 +326,7 @@ require("lazy").setup({
 				textobjects = {
 					move = {
 						enable = true,
+						set_jumps = true,
 						goto_next_start = {
 							["]f"] = "@function.outer",
 							["]c"] = "@call.outer",
@@ -323,6 +355,9 @@ require("lazy").setup({
 						-- Automatically jump forward to textobj, similar to targets.vim
 						lookahead = true,
 						keymaps = {
+							["aa"] = "@parameter.outer",
+							["ia"] = "@parameter.inner",
+
 							["ac"] = {
 								query = "@call.outer",
 								desc = "Select outer part of a function call",
@@ -349,6 +384,11 @@ require("lazy").setup({
 								query = "@class.inner",
 								desc = "Select inner part of a class/struct",
 							},
+						},
+						selection_modes = {
+							["@function.outer"] = "V",
+							["@class.outer"] = "V",
+							["@call.outer"] = "v",
 						},
 					},
 				},
@@ -426,7 +466,15 @@ require("lazy").setup({
 				function()
 					require("refactoring").debug.print_var({ normal = true })
 				end,
-				desc = "Comment",
+				desc = "Print a variable",
+			},
+			{
+				"<leader>rc",
+				mode = { "n" },
+				function()
+					require("refactoring").debug.cleanup({})
+				end,
+				desc = "Cleanup print statements",
 			},
 		},
 		dependencies = {
@@ -510,23 +558,17 @@ require("lazy").setup({
 		},
 	},
 	-- for better quick fix list
-	{
-		"kevinhwang91/nvim-bqf",
-		event = "VeryLazy",
-	},
+	-- {
+	-- 	"kevinhwang91/nvim-bqf",
+	-- 	event = "VeryLazy",
+	-- },
+
+	{ "stefandtw/quickfix-reflector.vim", event = "VeryLazy" },
 
 	-- for live diagnostics population in quickfix list
 	{
 		"onsails/diaglist.nvim",
 		keys = {
-			{
-				"<leader>d0",
-				mode = { "n" },
-				function()
-					require("diaglist").open_buffer_diagnostics()
-				end,
-				desc = "Open buffer diagnostic list",
-			},
 			{
 				"<leader>dw",
 				mode = { "n" },
@@ -544,36 +586,6 @@ require("lazy").setup({
 		end,
 	},
 
-	-- rust stuff
-	{
-		"simrat39/rust-tools.nvim",
-		ft = "rust",
-		requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-		config = function()
-			local rust_tools = require("rust-tools")
-
-			rust_tools.setup({
-				tools = {
-					hover_actions = {
-						auto_focus = true,
-					},
-				},
-
-				server = {
-					on_attach = function(client, bufnr)
-						vim.keymap.set("n", "<leader>cha", rust_tools.hover_actions.hover_actions, { buffer = bufnr })
-						vim.keymap.set("n", "<leader>cr", rust_tools.runnables.runnables, { buffer = bufnr })
-						vim.keymap.set(
-							"n",
-							"<leader>cc",
-							rust_tools.open_cargo_toml.open_cargo_toml,
-							{ buffer = bufnr }
-						)
-					end,
-				},
-			})
-		end,
-	},
 	{
 		"gen740/SmoothCursor.nvim",
 		config = true,
@@ -581,5 +593,36 @@ require("lazy").setup({
 			cursor = "👉",
 		},
 		cmd = { "SmoothCursorStart", "SmoothCursorToggle" },
+	},
+	{
+		"folke/zen-mode.nvim",
+		config = function()
+			vim.keymap.set("n", "<leader>z", function()
+				require("zen-mode").setup({
+					window = {
+						width = 90,
+						options = {},
+					},
+				})
+				require("zen-mode").toggle()
+				vim.wo.wrap = false
+				vim.wo.number = true
+				vim.wo.rnu = true
+			end)
+
+			vim.keymap.set("n", "<leader>Z", function()
+				require("zen-mode").setup({
+					window = {
+						width = 80,
+						options = {},
+					},
+				})
+				require("zen-mode").toggle()
+				vim.wo.wrap = false
+				vim.wo.number = false
+				vim.wo.rnu = false
+				vim.opt.colorcolumn = "0"
+			end)
+		end,
 	},
 })

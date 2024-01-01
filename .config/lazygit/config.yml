@@ -1,3 +1,4 @@
+# ln -s ~/Library/Application\ Support/lazygit ~/Documents/work/dotfiles.public/lazygit
 os:
   editPreset: 'nvim'
 

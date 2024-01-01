@@ -1,0 +1,139 @@
+#  ln -s ~/Documents/work/dotfiles.public/.config/alacritty ~/.config/alacritty
+
+import = ["/Users/palanikannan/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
+live_config_reload = true
+
+[font]
+size = 15.0
+
+[font.normal]
+family = "SFMono Nerd Font"
+style = "Regular"
+
+[[keyboard.bindings]] # create new window in tmux inside current session
+chars = "\u0001c"
+key = "C"
+mods = "Command"
+
+[[keyboard.bindings]] # reload tmux config
+chars = "\u0001r"
+key = "R"
+mods = "Command"
+
+[[keyboard.bindings]] # create horizontal split tmux pane
+chars = "\u0001-"
+key = "Plus"
+mods = "Command|Shift"
+
+[[keyboard.bindings]] # create vertical split tmux pane 
+chars = "\u0001|"
+key = "Backslash"
+mods = "Command"
+
+[[keyboard.bindings]] # entering vim copy mode in terminal inside tmux
+chars = "\u0001["
+key = "LBracket"
+mods = "Command"
+
+[[keyboard.bindings]] # lazygit in tmux
+chars = "\u0001\u0007"
+key = "G"
+mods = "Command"
+
+[[keyboard.bindings]] # for maximizing current tmux pane
+chars = "\u0001m"
+key = "M"
+mods = "Command"
+
+[[keyboard.bindings]] # for glancing at all active tmux sessions
+chars = "\u0001\u0006"
+key = "F"
+mods = "Command"
+
+[[keyboard.bindings]] # detach from current tmux session
+chars = "\u0001d"
+key = "D"
+mods = "Command"
+
+[[keyboard.bindings]] # resizing tmux pane 
+chars = "\u0001j"
+key = "J"
+mods = "Command"
+
+[[keyboard.bindings]] # resizing tmux pane
+chars = "\u0001k"
+key = "K"
+mods = "Command"
+
+[[keyboard.bindings]] # resizing tmux pane
+chars = "\u0001h"
+key = "H"
+mods = "Command"
+
+[[keyboard.bindings]] # resizing tmux pane
+chars = "\u0001l"
+key = "L"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 1
+chars = "\u00011"
+key = "Key1"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 2
+chars = "\u00012"
+key = "Key2"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 3
+chars = "\u00013"
+key = "Key3"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 4
+chars = "\u00014"
+key = "Key4"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 5
+chars = "\u00015"
+key = "Key5"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 6
+chars = "\u00016"
+key = "Key6"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 7
+chars = "\u00017"
+key = "Key7"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 8
+chars = "\u00018"
+key = "Key8"
+mods = "Command"
+
+[[keyboard.bindings]] # select tmux pane 9
+chars = "\u00019"
+key = "Key9"
+mods = "Command"
+
+[[keyboard.bindings]] # kill the current tmux session 
+chars = "\u0001w"
+key = "X"
+mods = "Command"
+
+[shell]
+args = ["-l", "-c", "tmux has-session && tmux attach || true; exec zsh"]
+program = "/bin/zsh"
+
+[window]
+decorations = "buttonless"
+dynamic_padding = false
+opacity = 0.9
+
+[window.dimensions]
+columns = 180
+lines = 100

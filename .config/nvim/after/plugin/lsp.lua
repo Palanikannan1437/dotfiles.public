@@ -5,10 +5,8 @@ local cmp = require("cmp")
 local cmp_action = require("lsp-zero").cmp_action()
 local luasnip = require("luasnip")
 local nnoremap = require("palani.keymap").nnoremap
-local conform = require("conform")
+local icons = require("palani.icons")
 
--- TODO: Add lazy loading to plugins
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
 mason.setup({})
 mason_lspconfig.setup({
 	ensure_installed = {
@@ -18,13 +16,39 @@ mason_lspconfig.setup({
 		"bashls",
 		"gopls",
 		"tailwindcss",
+		"rust_analyzer",
 	},
 
 	handlers = {
 		lsp_zero.default_setup,
 		-- to avoid global variable vim error
 		lua_ls = function()
-			local lua_opts = lsp_zero.nvim_lua_ls()
+			local lua_opts = {
+				-- cmd = {...},
+				-- filetypes { ...},
+				-- capabilities = {},
+				settings = {
+					Lua = {
+						runtime = { version = "LuaJIT" },
+						workspace = {
+							checkThirdParty = false,
+							-- Tells lua_ls where to find all the Lua files that you have loaded
+							-- for your neovim configuration.
+							library = {
+								"${3rd}/luv/library",
+								unpack(vim.api.nvim_get_runtime_file("", true)),
+							},
+							-- If lua_ls is really slow on your computer, you can try this instead:
+							-- library = { vim.env.VIMRUNTIME },
+						},
+						completion = {
+							callSnippet = "Replace",
+						},
+						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+						-- diagnostics = { disable = { 'missing-fields' } },
+					},
+				},
+			}
 			require("lspconfig").lua_ls.setup(lua_opts)
 		end,
 	},
@@ -40,10 +64,10 @@ lsp_zero.on_attach(function(client, bufnr)
 
 		-- for typescript types go to definition works best with the lsp and
 		-- function overloads
-		nnoremap("gt", vim.lsp.buf.definition, options)
-		nnoremap("gT", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", options)
-		nnoremap("tgt", vim.lsp.buf.type_definition, options)
-		nnoremap("tgT", "<cmd>vsplit | lua vim.lsp.buf.type_definition()<CR>", options)
+		nnoremap("gu", vim.lsp.buf.definition, options)
+		nnoremap("gU", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", options)
+		nnoremap("tgu", vim.lsp.buf.type_definition, options)
+		nnoremap("tgu", "<cmd>vsplit | lua vim.lsp.buf.type_definition()<CR>", options)
 
 		nnoremap("tami", "<cmd>TSToolsAddMissingImports<CR>", options)
 		nnoremap("toi", "<cmd>TSToolsOrganizeImports<CR>", options)
@@ -52,8 +76,8 @@ lsp_zero.on_attach(function(client, bufnr)
 		nnoremap("tfa", "<cmd>TSToolsFixAll<CR>", options)
 		nnoremap("trnf", "<cmd>TSToolsRenameFile<CR>", options)
 	else
-		nnoremap("gt", vim.lsp.buf.type_definition, options)
-		nnoremap("gT", "<cmd>vsplit | lua vim.lsp.buf.type_definition()<CR>", options)
+		nnoremap("gu", vim.lsp.buf.type_definition, options)
+		nnoremap("gU", "<cmd>vsplit | lua vim.lsp.buf.type_definition()<CR>", options)
 		nnoremap("gd", vim.lsp.buf.definition, options)
 		nnoremap("gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", options)
 	end
@@ -73,33 +97,24 @@ lsp_zero.on_attach(function(client, bufnr)
 	nnoremap("[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 	nnoremap("]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 	nnoremap("[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
+	nnoremap("]h", diagnostic_goto(true, "HINT"), { desc = "Next Hint" })
+	nnoremap("[h", diagnostic_goto(false, "HINT"), { desc = "Prev Hint" })
 
 	nnoremap("gi", vim.lsp.buf.implementation, options)
 	nnoremap("<leader>ca", vim.lsp.buf.code_action, options)
 	nnoremap("<leader>rn", vim.lsp.buf.rename, options)
 	nnoremap("<space>e", vim.diagnostic.open_float, options)
-	nnoremap("<space>q", vim.diagnostic.setloclist, options)
-	vim.keymap.set({ "n", "v", "x" }, "<leader>i", function()
-		conform.format({
-			lsp_fallback = true,
-			async = false,
-			timeout_ms = 10000,
-		})
-	end)
+	nnoremap("<space>q", vim.diagnostic.setqflist, options)
 end)
-
-vim.diagnostic.config({
-	virtual_text = false,
-})
 
 lsp_zero.set_preferences({
 	file_ignore_patterns = { "*.d.ts" },
 	suggest_lsp_servers = true,
 	sign_icons = {
-		error = "E",
-		warn = "W",
-		hint = "H",
-		info = "I",
+		error = icons.diagnostics.Error,
+		warn = icons.diagnostics.Warning,
+		hint = icons.diagnostics.Hint,
+		info = icons.diagnostics.Info,
 	},
 })
 
@@ -108,6 +123,8 @@ require("luasnip.loaders.from_vscode").lazy_load()
 
 -- add .tsx snippets support for .ts files
 require("luasnip").filetype_extend("typescript", { "typescriptreact" })
+
+luasnip.config.setup({})
 
 cmp.setup({
 	sources = {
@@ -187,4 +204,8 @@ cmp.setup.cmdline({ "/" }, {
 	sources = {
 		{ name = "buffer" },
 	},
+})
+
+vim.diagnostic.config({
+	virtual_text = false,
 })

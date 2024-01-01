@@ -25,6 +25,10 @@ nnoremap("<right>", "<nop>")
 vim.keymap.set("n", "<C-n>", "<cmd>:cnext<CR>")
 vim.keymap.set("n", "<C-p>", "<cmd>:cprev<CR>")
 vim.keymap.set("n", "<leader>q", "<cmd>:copen<CR>")
+vim.keymap.set("n", "<leader>c", "<cmd>:cclose<CR>")
+
+-- switching between alternate files made easier
+nnoremap("<leader><leader>", "<C-^>")
 
 --window size management
 nnoremap("<C-Left>", ":vertical resize -3<CR>")
@@ -59,4 +63,16 @@ vim.keymap.set("n", "[b", "<cmd>bprevious<cr>", {
 })
 vim.keymap.set("n", "]b", "<cmd>bnext<cr>", {
 	desc = "Next buffer",
+})
+
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+	group = highlight_group,
+	pattern = "*",
 })

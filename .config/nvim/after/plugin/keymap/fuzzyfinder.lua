@@ -15,19 +15,20 @@ nnoremap(
 )
 
 nnoremap(
-	"<leader>q",
-	"<cmd>lua require('fzf-lua').quickfix({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
-	{ silent = true }
-)
-
-nnoremap(
 	"<leader>rh",
 	"<cmd>lua require('fzf-lua').live_grep_native({ fzf_opts = {['--layout'] = 'reverse-list'} , resume = true })<CR>",
 	{ silent = true }
 )
 
+nnoremap("<leader>gi", function()
+	require("fzf-lua").grep({
+		fzf_opts = { ["--layout"] = "reverse-list" },
+		raw_cmd = [[git status -su | rg "^\s*M" | cut -d ' ' -f3 | xargs rg --hidden --column --line-number --no-heading --color=always --smart-case --with-filename --max-columns=4096 -e '']],
+	})
+end, { silent = true })
+
 nnoremap(
-	"<leader>cw",
+	"<leader>go",
 	"<cmd>lua require('fzf-lua').grep_cword({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
 	{ silent = true }
 )
@@ -51,12 +52,6 @@ nnoremap(
 
 nnoremap(
 	"<leader>wd",
-	"<cmd>lua require('fzf-lua').lsp_document_diagnostics({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
-	{ silent = true }
-)
-
-nnoremap(
-	"<leader>ww",
 	"<cmd>lua require('fzf-lua').lsp_workspace_diagnostics({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
 	{ silent = true }
 )

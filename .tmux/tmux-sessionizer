@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# ln -s ~/Documents/work/dotfiles.public/.tmux /usr/local/bin
+
 # Check if fzf is installed
 if ! command -v fzf &>/dev/null; then
 	echo "Error: fzf not found. Please install fzf." >&2
