@@ -49,6 +49,7 @@ vim.opt.splitbelow = true
 -- Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 -- delays and poor user experience.
 vim.opt.updatetime = 50
+
 -- for syncing with system clipboard
 vim.opt.clipboard = "unnamedplus"
 vim.g.mapleader = " "
@@ -56,3 +57,9 @@ vim.g.mapleader = " "
 -- scroll starts while the cursor is at the middle itself instead of starting
 -- when the cursor hits the top
 vim.opt.scrolloff = 999
+
+-- virtual edit for ctrl+v i.e. visual block mode
+vim.opt.virtualedit = "block"
+
+-- to ignore cases in :blah vs :Blah command suggestion
+vim.opt.ignorecase = true

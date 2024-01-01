@@ -1,5 +1,4 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-local nnoremap = require("palani.keymap").nnoremap
 local uv = vim.uv or vim.loop
 
 -- Auto-install lazy.nvim if not present
@@ -18,6 +17,8 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 vim.opt.fillchars:append({ diff = "╱" })
+
+local nnoremap = require("palani.keymap").nnoremap
 
 require("lazy").setup({
 	-- dependencies
@@ -275,6 +276,7 @@ require("lazy").setup({
 					end,
 				},
 			})
+			vim.cmd.colorscheme("catppuccin-mocha")
 		end,
 	},
 
@@ -474,7 +476,7 @@ require("lazy").setup({
 		keys = { "cs", "ds", "ys" },
 	},
 
-	-- nvim colors
+	-- nvim fncolors
 	{ "norcalli/nvim-colorizer.lua", ft = { "css", "javascriptreact", "typescriptreact", "html" } },
 
 	-- file explorer
