@@ -26,13 +26,13 @@ tmux has-session -t=$selected_name 2>/dev/null
 
 # 2. Create the session if it doesn't exists.
 if [[ $? -ne 0 ]]; then
-	if [[ $selected_name == "plane" ]]; then
-		# Use tmuxifier to load the session without attaching
-		tmuxifier load-session "$selected_name"
-		exit 0
-	else
-		TMUX='' tmux new-session -d -s "$selected_name" -c "$selected"
-	fi
+	# if [[ $selected_name == "plane" ]]; then
+	# 	# Use tmuxifier to load the session without attaching
+	# 	tmuxifier load-session "$selected_name"
+	# 	exit 0
+	# else
+	TMUX='' tmux new-session -d -s "$selected_name" -c "$selected"
+	# fi
 fi
 
 # 3. Attach if outside of tmux, switch if you're in tmux.

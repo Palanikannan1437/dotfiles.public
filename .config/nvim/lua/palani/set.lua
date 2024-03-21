@@ -56,3 +56,6 @@ vim.opt.clipboard = "unnamedplus"
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+
+-- common status lines across buffer
+vim.opt.laststatus = 3
