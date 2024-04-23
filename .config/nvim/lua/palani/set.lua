@@ -8,6 +8,7 @@ vim.opt.relativenumber = true
 
 vim.opt.errorbells = false
 
+vim.opt.conceallevel = 1
 vim.opt.ttimeoutlen = 0
 vim.opt.cursorline = true
 
