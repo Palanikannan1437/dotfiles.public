@@ -10,7 +10,7 @@ harpoon:setup({
 })
 
 nnoremap("<leader>a", function()
-	harpoon:list():append()
+	harpoon:list():add()
 end)
 nnoremap("<C-e>", function()
 	harpoon.ui:toggle_quick_menu(harpoon:list())

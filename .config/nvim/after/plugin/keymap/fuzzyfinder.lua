@@ -8,11 +8,11 @@ require("fzf-lua").setup({
 	},
 })
 
-nnoremap(
-	"<leader>h",
-	"<cmd>lua require('fzf-lua').live_grep_native({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
-	{ silent = true }
-)
+-- nnoremap(
+-- 	"<leader>h",
+-- 	"<cmd>lua require('fzf-lua').live_grep_native({ fzf_opts = {['--layout'] = 'reverse-list'} })<CR>",
+-- 	{ silent = true }
+-- )
 
 nnoremap(
 	"<leader>rh",
