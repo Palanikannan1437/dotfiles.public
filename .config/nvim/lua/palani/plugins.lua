@@ -130,6 +130,32 @@ require("lazy").setup({
 			},
 		},
 	},
+	-- Use your favorite package manager to install, for example in lazy.nvim
+	--  Optionally, you can also install nvim-telescope/telescope.nvim to use some search functionality.
+	{
+		{
+			"sourcegraph/sg.nvim",
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				"nvim-telescope/telescope.nvim",
+			},
+			config = true,
+			-- If you have a recent version of lazy.nvim, you don't need to add this!
+			build = "nvim -l build/init.lua",
+		},
+	},
+
+	-- fuzzyfinder
+	{
+		"nvim-telescope/telescope.nvim",
+		tag = "0.1.6",
+		dependencies = { "nvim-lua/plenary.nvim" },
+	},
+	{
+		"nvim-telescope/telescope-fzf-native.nvim",
+		build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+	},
+
 	-- something for after v10 neovim
 	-- -- tailwind-tools.lua
 	-- {
@@ -233,9 +259,11 @@ require("lazy").setup({
 				end
 			end
 
+			local cyberdream = require("lualine.themes.cyberdream")
 			require("lualine").setup({
 				options = {
-					theme = "catppuccin",
+					-- theme = "catppuccin",
+					theme = cyberdream,
 					globalstatus = true,
 					separator = " ",
 				},
@@ -446,45 +474,56 @@ require("lazy").setup({
 
 	-- AI Autocompletion
 	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
+		"supermaven-inc/supermaven-nvim",
 		config = function()
-			require("copilot").setup({
-				suggestion = {
-					enabled = true,
-					auto_trigger = true,
-					debounce = 75,
-					keymap = {
-						accept = "<Tab>",
-						accept_word = false,
-						accept_line = false,
-						next = "<M-]>",
-						prev = "<M-[>",
-						dismiss = "<C-]>",
-					},
-				},
-			})
+			require("supermaven-nvim").setup({})
 		end,
 	},
 
-	-- color theme
+	-- call tracing
 	{
-		"catppuccin/nvim",
-		priority = 1000,
-		name = "catppuccin",
+		"ldelossa/litee.nvim",
+		event = "VeryLazy",
+		opts = {
+			notify = { enabled = false },
+			panel = {
+				orientation = "bottom",
+				panel_size = 10,
+			},
+		},
+		config = function(_, opts)
+			require("litee.lib").setup(opts)
+		end,
+	},
+
+	{
+		"ldelossa/litee-calltree.nvim",
+		dependencies = "ldelossa/litee.nvim",
+		event = "VeryLazy",
+		opts = {
+			on_open = "panel",
+			map_resize_keys = false,
+		},
+		config = function(_, opts)
+			require("litee.calltree").setup(opts)
+		end,
+	},
+
+	-- theme
+	{
+		"scottmckendry/cyberdream.nvim",
 		lazy = false,
+		priority = 1000,
 		config = function()
-			require("catppuccin").setup({
-				highlight_overrides = {
-					mocha = function(mocha)
-						return {
-							LineNr = { fg = mocha.overlay1 },
-						}
-					end,
-				},
+			require("cyberdream").setup({
+				-- Recommended - see "Configuring" below for more config options
+				transparent = true,
+				italic_comments = true,
+				hide_fillchars = true,
+				borderless_telescope = true,
+				terminal_colors = true,
 			})
-			vim.cmd.colorscheme("catppuccin-mocha")
+			vim.cmd("colorscheme cyberdream") -- set the colorscheme
 		end,
 	},
 
