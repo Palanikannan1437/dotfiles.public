@@ -151,18 +151,18 @@ require("lazy").setup({
 		tag = "0.1.6",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
+
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
 	},
 
 	-- something for after v10 neovim
-	-- -- tailwind-tools.lua
-	-- {
-	-- 	"luckasRanarison/tailwind-tools.nvim",
-	-- 	opts = {}, -- your configuration
-	-- },
-	--
+	-- tailwind-tools.lua
+	{
+		"luckasRanarison/tailwind-tools.nvim",
+		opts = {}, -- your configuration
+	},
 
 	-- { "chrisgrieser/nvim-dr-lsp" },
 	-- status and window line
@@ -353,7 +353,6 @@ require("lazy").setup({
 		event = { "BufReadPre", "BufNewFile" },
 		config = true,
 		opts = function()
-			local icons = require("palani.icons")
 			local C = {
 				on_attach = function(bufnr)
 					local gs = package.loaded.gitsigns

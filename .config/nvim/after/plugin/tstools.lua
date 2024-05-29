@@ -7,7 +7,7 @@ require("typescript-tools").setup({
 		client.server_capabilities.documentRangeFormattingProvider = false
 
 		if vim.lsp.inlay_hint then
-			vim.lsp.inlay_hint(bufnr, true)
+			vim.lsp.inlay_hint.enable(true)
 		end
 	end,
 	settings = {
@@ -24,9 +24,3 @@ require("typescript-tools").setup({
 		},
 	},
 })
-
-if vim.lsp.inlay_hint then
-	vim.keymap.set("n", "<leader>l", function()
-		vim.lsp.inlay_hint(0, nil)
-	end, { desc = "Toggle Inlay Hints" })
-end

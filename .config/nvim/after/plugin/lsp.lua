@@ -82,8 +82,6 @@ lsp_zero.on_attach(function(client, bufnr)
 		nnoremap("gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", options)
 	end
 
-	nnoremap("K", vim.lsp.buf.hover, options)
-
 	local diagnostic_goto = function(next, severity)
 		local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
 		severity = severity and vim.diagnostic.severity[severity] or nil
@@ -91,14 +89,16 @@ lsp_zero.on_attach(function(client, bufnr)
 			go({ severity = severity })
 		end
 	end
-	nnoremap("]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
-	nnoremap("[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
 	nnoremap("]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
 	nnoremap("[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 	nnoremap("]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 	nnoremap("[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 	nnoremap("]h", diagnostic_goto(true, "HINT"), { desc = "Next Hint" })
 	nnoremap("[h", diagnostic_goto(false, "HINT"), { desc = "Prev Hint" })
+
+	nnoremap("<leader>b", function()
+		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+	end, { desc = "Toggle Inlay Hints" })
 
 	nnoremap("gi", vim.lsp.buf.implementation, options)
 	nnoremap("<leader>ca", vim.lsp.buf.code_action, options)
