@@ -22,6 +22,15 @@ require("lazy").setup({
 	-- dependencies
 	"nvim-lua/plenary.nvim",
 
+	-- preview markdown in neovim
+	{
+		"henriklovhaug/Preview.nvim",
+		cmd = { "Preview" },
+		config = function()
+			require("preview").setup()
+		end,
+	},
+
 	-- obsidian
 	{
 		"epwalsh/obsidian.nvim",

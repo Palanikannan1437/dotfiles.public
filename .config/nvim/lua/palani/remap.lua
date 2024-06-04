@@ -76,3 +76,41 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = highlight_group,
 	pattern = "*",
 })
+
+-- surround selection with backticks
+local function get_visual_selection()
+	local _, ls, cs, _ = unpack(vim.fn.getpos("v"))
+	local _, le, ce, _ = unpack(vim.fn.getpos("."))
+
+	-- Swap if the selection is made from bottom to top
+	if ls > le or (ls == le and cs > ce) then
+		ls, le = le, ls
+		cs, ce = ce, cs
+	end
+
+	return vim.api.nvim_buf_get_lines(0, ls - 1, le, false)
+end
+
+local function surround_selection_with_backticks()
+	-- Get the visual selection
+	local lines = get_visual_selection()
+
+	-- Ensure lines are not nil
+	if not lines or #lines == 0 then
+		print("No lines selected")
+		return
+	end
+
+	-- Surround the text with triple dots
+	table.insert(lines, 1, "```")
+	table.insert(lines, "```")
+
+	-- Join the lines into a single string
+	local text = table.concat(lines, "\n")
+
+	-- Copy the text to the system clipboard
+	vim.fn.setreg("+", text)
+	print("Copied to clipboard with surrounding backticks")
+end
+
+vim.keymap.set("v", "<leader>c", surround_selection_with_backticks, { desc = "Surround selection with backticks" })
